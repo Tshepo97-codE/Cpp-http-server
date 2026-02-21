@@ -1,0 +1,114 @@
+name: C++ HTTP Server CI
+
+# Trigger on push to main/develop and all pull requests
+on:
+    push:
+        branches: [ main, develop ]
+    pull_request:
+        branches: [ main, develop ]
+
+jobs:
+    build-and-test:
+        name: Build and Test on ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+                build_type: [Debug, Release]
+
+        steps:
+        # Checkout the code
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        # Install dependencies (Ubuntu)
+        - name: Install dependencies (Ubuntu)
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y cmake g++ libgtest-dev
+
+        # Setup MSVC (Windows)
+        - name: Setup MSVC (Windows)
+          if: runner.os == 'Windows'
+          uses: microsoft/setup-msbuild@v1.1
+
+        # Configure CMake
+        - name: Configure CMake
+          run:  |
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+        # Build the project
+        - name: Build
+          run:  |
+            cd build
+            cmake --build . --config ${{ matrix.build_type }}
+          continue-on-error: true # Don't fail if build fails yet
+
+        # Upload build artifacts
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: http-server-build-${{ matrix.os }}-${{ matrix.build_type }}
+            path: |
+              build/http_server*
+              build/*.exe
+            retention-days: 7
+
+    code-quality:
+        name: Code Quality Checks
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+    
+        # Check code formatting (optional, requires clang-format)
+        - name: Install clang-format
+          run: sudo apt-get install -y clang-format
+
+        - name: Check code formatting
+          run:  |
+            find include src -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run -Werror
+          continue-on-error: true # Don't fail build, just warn
+
+        # Static analysis with clang-tidy
+        - name: Install clang-tidy
+          run: sudo apt-get install -y clang-tidy
+    
+        - name: Run clang-tidy
+          run: |
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            cd ..
+            find src -name "*.cpp" | xargs clang-tidy -p build
+          continue-on-error: true  # Don't fail build, just warn
+
+    security-scan:
+      name: Security Scan
+      runs-on: ubuntu-latest
+    
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # Scan for security vulnerabilities
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      
+      - name: Build for analysis
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build .
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

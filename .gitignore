@@ -1,41 +1,87 @@
-# Prerequisites
-*.d
+# Build directories
+build/
+cmake-build-*/
+out/
 
-# Compiled Object files
-*.slo
-*.lo
+# Compiled object files
 *.o
 *.obj
+*.lo
+*.slo
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
+# Compiled executables
 *.exe
 *.out
 *.app
 
-# debug information files
-*.dwo
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled static libraries
+*.a
+*.lib
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+
+# IDE specific files
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Code::Blocks
+*.cbp
+*.depend
+*.layout
+
+# CLion
+.idea/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+logs/
+
+# Test coverage
+*.gcda
+*.gcno
+*.gcov
+coverage/
+*.profdata
+*.profraw
+
+# Documentation build
+docs/html/
+docs/latex/
+docs/doxygen_sqlite3.db
+
+# vcpkg
+vcpkg_installed/
+
+# Package managers
+conan/
+.conan/
+
+# Server runtime files
+server.pid
+*.sock
