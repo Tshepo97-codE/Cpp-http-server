@@ -40,7 +40,7 @@ Designed for extension without modification. New HTTP methods or routes can be a
 │                Business Logic Layer                  │
 │  ┌───────────────┬──────────────┬─────────────────┐  │
 │  │  HTTPParser   │  HTTPResponse│     Router      │  │
-│  │  Parse requests│ Build replies│  URL → Handler │  │
+│  │ Parse requests│ Build replies│  URL → Handler  │  │
 │  └───────────────┴──────────────┴─────────────────┘  │
 ├──────────────────────────────────────────────────────┤
 │               Infrastructure Layer                   │
