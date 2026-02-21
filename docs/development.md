@@ -216,7 +216,7 @@ cmake --build . --target clean
 **Tasks**:
 - [x] Create repository and directory structure
 - [x] Write design documents (architecture.md, ADRs)
-- [ ] Create initial CMakeLists.txt
+- [x] Create initial CMakeLists.txt
 - [ ] Implement Config class (parse server.conf)
 - [ ] Implement Logger class (thread-safe logging)
 - [ ] Write unit tests for Config and Logger
